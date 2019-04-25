@@ -1,0 +1,961 @@
+networks:
+  internal:
+    external: false
+  proxied:
+    external: true
+  vpn: null
+services:
+  bazarr:
+    container_name: bazarr
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 6767
+    image: linuxserver/bazarr:latest
+    labels:
+    - traefik.backend=bazarr
+    - traefik.frontend.rule=Host:bazarr.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=6767
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/bazarr/config:/config
+    - ${MEDIA_DIR_MOVIES}:/movies
+    - ${MEDIA_DIR_TV}:/tv
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  beets:
+    container_name: beets
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8337
+    image: linuxserver/beets:latest
+    labels:
+    - traefik.backend=beets
+    - traefik.frontend.rule=Host:beets.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8337
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/beets/config:/config
+    - ${MEDIA_DIR_MUSIC}:/music
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  cadvisor:
+    container_name: cadvisor
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8080
+    image: google/cadvisor:latest
+    labels:
+    - traefik.backend=cadvisor
+    - traefik.frontend.rule=Host:cadvisor.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8080
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:ro
+    - /sys:/sys:ro
+    - /var/lob/docker/:/var/lib/docker:ro
+    - /dev/disk/:/dev/disk:ro
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  calibreweb:
+    container_name: calibreweb
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8083
+    image: linuxserver/calibre-web:latest
+    labels:
+    - traefik.backend=calibreweb
+    - traefik.frontend.rule=Host:calibre.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8083
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/calibreweb/config:/config
+    - ${MEDIA_DIR_BOOKS}:/books
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  cardigann:
+    container_name: cardigann
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 5060
+    image: linuxserver/cardigann:latest
+    labels:
+    - traefik.backend=cardigann
+    - traefik.frontend.rule=Host:cardigann.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=5060
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/cardigann/config:/config
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  cops:
+    container_name: cops
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8084
+    image: linuxserver/cops:latest
+    labels:
+    - traefik.backend=cops
+    - traefik.frontend.rule=Host:cops.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8084
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/cops/config:/config
+    - ${MEDIA_DIR_BOOKS}:/books
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  couchpotato:
+    container_name: couchpotato
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 5050
+    image: linuxserver/couchpotato:latest
+    labels:
+    - traefik.backend=couchpotato
+    - traefik.frontend.rule=Host:couchpotato.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=5050
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/couchpotato/config:/config
+    - ${MEDIA_DIR_MOVIES}:/movies
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  deluge:
+    container_name: deluge
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8112
+    image: linuxserver/deluge:latest
+    labels:
+    - traefik.backend=deluge
+    - traefik.frontend.rule=Host:deluge.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8112
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/deluge/config:/config
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  emby:
+    container_name: emby
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8096
+    image: emby/embyserver:latest
+    labels:
+    - traefik.backend=emby
+    - traefik.frontend.rule=Host:emby.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8096
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/emby/config:/config
+    - ${MEDIA_DIR_TV}:/data/tv
+    - ${MEDIA_DIR_MOVIES}:/data/movies
+    - ${MEDIA_DIR_MUSIC}:/data/music
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  gazee:
+    container_name: gazee
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 4242
+    image: linuxserver/gazee:latest
+    labels:
+    - traefik.backend=gazee
+    - traefik.frontend.rule=Host:gazee.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=4242
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/gazee/config:/config
+    - ${CONTAINER_DIR}/mylar/config:/mylar
+    - ${MEDIA_DIR_COMICS}:/comics
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  glances:
+    container_name: glances
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    - GLANCES_OPT=-w
+    expose:
+    - 61208
+    - 61209
+    image: nicolargo/glances:latest
+    labels:
+    - traefik.backend=glances
+    - traefik.frontend.rule=Host:glances.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=61208
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    pid: host
+    restart: unless-stopped
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    - ${CONTAINER_DIR}/glances/config:/glances/conf
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  headphones:
+    container_name: headphones
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8181
+    image: linuxserver/headphones:latest
+    labels:
+    - traefik.backend=headphones
+    - traefik.frontend.rule=Host:headphones.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8181
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/headphones/config:/config
+    - ${MEDIA_DIR_MUSIC}:/music
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  heimdall:
+    container_name: heimdall
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 80
+    - 443
+    image: linuxserver/heimdall:latest
+    labels:
+    - traefik.backend=heimdall
+    - traefik.frontend.rule=Host:heimdall.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=80
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/heimdall/config:/config
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  htpcmanager:
+    container_name: htpcmanager
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8085
+    image: linuxserver/htpcmanager:latest
+    labels:
+    - traefik.backend=htpcmanager
+    - traefik.frontend.rule=Host:htpcmanager.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8085
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/htpcmanager/config:/config
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  hydra:
+    container_name: hydra
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 5076
+    image: linuxserver/hydra2:latest
+    labels:
+    - traefik.backend=hydra
+    - traefik.frontend.rule=Host:hydra.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=5076
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/hydra/config:/config
+    - ${DOWNLOAD_DIR}/hydra/blackhole:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  jackett:
+    container_name: jackett
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 9117
+    image: linuxserver/jackett:latest
+    labels:
+    - traefik.backend=jackett
+    - traefik.frontend.rule=Host:jackett.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=9117
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/jackett/config:/config
+    - ${DOWNLOAD_DIR}/jackett/blackhole:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  kodi-headless:
+    container_name: kodi-headless
+    depends_on:
+    - kodi-mariadb
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8080
+    - 9090
+    - 9777
+    image: linuxserver/kodi-headless:latest
+    labels:
+    - traefik.backend=kodi-headless
+    - traefik.frontend.rule=Host:kodi-headless.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8080
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/kodi-headless/config:/config/.kodi
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  kodi-mariadb:
+    container_name: kodi-mariadb
+    environment:
+    - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    - MYSQL_DATABASE=${MARIADB_DATABASE}
+    - MYSQL_USER=${MARIADB_USER}
+    - MYSQL_PASSWORD=${MARIADB_PASSWORD}
+    expose:
+    - 3306
+    image: mariadb:latest
+    networks:
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/kodi-mariadb/data:/var/lib/mysql
+  lazylibrarian:
+    container_name: lazylibrarian
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 5299
+    image: linuxserver/lazylibrarian:latest
+    labels:
+    - traefik.backend=lazylibrarian
+    - traefik.frontend.rule=Host:lazylibrarian.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=5299
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/lazylibrarian/config:/config
+    - ${MEDIA_DIR_BOOKS}:/books
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  lidarr:
+    container_name: lidarr
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8686
+    image: linuxserver/lidarr:latest
+    labels:
+    - traefik.backend=lidarr
+    - traefik.frontend.rule=Host:lidarr.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8686
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/lidarr/config:/config
+    - ${MEDIA_DIR_MUSIC}:/music
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  medusa:
+    container_name: medusa
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8081
+    image: linuxserver/medusa:latest
+    labels:
+    - traefik.backend=medusa
+    - traefik.frontend.rule=Host:medusa.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8081
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/medusa/config:/config
+    - ${MEDIA_DIR_TV}:/tv
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  muximux:
+    container_name: muximux
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 80
+    image: linuxserver/muximux:latest
+    labels:
+    - traefik.backend=muximux
+    - traefik.frontend.rule=Host:muximux.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=80
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/muximux/config:/config
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  mylar:
+    container_name: mylar
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8090
+    image: linuxserver/mylar:latest
+    labels:
+    - traefik.backend=mylar
+    - traefik.frontend.rule=Host:mylar.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8090
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/mylar/config:/config
+    - ${MEDIA_DIR_COMICS}:/comics
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  nzbget:
+    container_name: nzbget
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 6789
+    image: linuxserver/nzbget:latest
+    labels:
+    - traefik.backend=nzbget
+    - traefik.frontend.rule=Host:nzbget.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=6789
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/nzbget/config:/config
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  ombi:
+    container_name: ombi
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 3579
+    image: linuxserver/ombi:latest
+    labels:
+    - traefik.backend=ombi
+    - traefik.frontend.rule=Host:ombi.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=3579
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/ombi/config:/config
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  organizr:
+    container_name: organizr
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 80
+    image: organizrtools/organizr-v2:php-fpm
+    labels:
+    - traefik.backend=organizr
+    - traefik.frontend.rule=Host:organizr.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=80
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/organizr/config:/config
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  oscarr:
+    container_name: oscarr
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 5656
+    image: morpheus65535/oscarr:latest
+    labels:
+    - traefik.backend=oscarr
+    - traefik.frontend.rule=Host:oscarr.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=5656
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/oscarr:/data
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  plex:
+    container_name: plex
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    - PLEX_CLAIM=${PLEX_CLAIM_TOKEN}
+    expose:
+    - 32400
+    hostname: plex
+    image: plexinc/pms-docker:plexpass
+    labels:
+    - traefik.backend=plex
+    - traefik.frontend.rule=Host:plex.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=32400
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    ports:
+    - 32400:32400
+    - 32469:32469
+    - 3005:3005
+    - 8324:8324
+    - 1900:1900/udp
+    - 5353:5353/udp
+    - 32410:32410/udp
+    - 32412:32412/udp
+    - 32413:32413/udp
+    - 32414:32414/udp
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/plex/config:/config
+    - ${MEDIA_DIR_TV}:/data/tv
+    - ${MEDIA_DIR_MOVIES}:/data/movies
+    - ${MEDIA_DIR_MUSIC}:/data/music
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  portainer:
+    container_name: portainer
+    expose:
+    - 9000
+    image: portainer/portainer:latest
+    labels:
+    - traefik.backend=portainer
+    - traefik.frontend.rule=Host:portainer.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=9000
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - ${CONTAINER_DIR}/portainer/config:/data
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  radarr:
+    container_name: radarr
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 7878
+    image: linuxserver/radarr:latest
+    labels:
+    - traefik.backend=radarr
+    - traefik.frontend.rule=Host:radarr.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=7878
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/radarr/config:/config
+    - ${MEDIA_DIR_MOVIES}:/movies
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  sabnzbd:
+    container_name: sabnzbd
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8080
+    image: linuxserver/sabnzbd:latest
+    labels:
+    - traefik.backend=sabnzbd
+    - traefik.frontend.rule=Host:sab.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8080
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/sabnzbd/config:/config
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  sonarr:
+    container_name: sonarr
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8989
+    image: linuxserver/sonarr:latest
+    labels:
+    - traefik.backend=sonarr
+    - traefik.frontend.rule=Host:sonarr.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8989
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/sonarr/config:/config
+    - ${MEDIA_DIR_TV}:/tv
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  tautulli:
+    container_name: tautulli
+    depends_on:
+    - plex
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 8181
+    image: tautulli/tautulli:latest
+    labels:
+    - traefik.backend=tautulli
+    - traefik.frontend.rule=Host:tautulli.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8181
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/tautulli/config:/config
+    - ${CONTAINER_DIR}/plex/config/Library/Application\ Support/Plex\ Media\ Server/Logs:/logs:ro
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  traefik:
+    container_name: traefik
+    expose:
+    - 8080
+    image: traefik:latest
+    labels:
+    - traefik.backend=traefik
+    - traefik.frontend.rule=Host:traefik.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8080
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - proxied
+    - internal
+    ports:
+    - 80:80
+    - 443:443
+    restart: unless-stopped
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - ${CONTAINER_DIR}/traefik/traefik.toml:/traefik.toml
+    - ${CONTAINER_DIR}/traefik/acme.json:/acme.json
+    - ${CONTAINER_DIR}/traefik/traefik.passwd:/traefik.passwd
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  transmission:
+    cap_add:
+    - NET_ADMIN
+    container_name: transmission
+    devices:
+    - /dev/net/tun
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    - OPENVPN_PROVIDER=${VPN_PROVIDER}
+    - OPENVPN_USERNAME=${VPN_USER}
+    - OPENVPN_PASSWORD=${VPN_PASS}
+    - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60
+    - TRANSMISSION_DOWNLOAD_DIR=/downloads/complete
+    - TRANSMISSION_INCOMPLETE_DIR=/downloads/incomplete
+    - TRANSMISSION_RPC_HOST_WHITELIST=*.${DOMAIN}
+    expose:
+    - 9091
+    image: haugene/transmission-openvpn:latest
+    networks:
+    - vpn
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/transmission:/data
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  transmission_proxy:
+    container_name: transmission_proxy
+    depends_on:
+    - transmission
+    expose:
+    - 8080
+    image: haugene/transmission-openvpn-proxy:latest
+    labels:
+    - traefik.backend=vpn_proxy
+    - traefik.frontend.rule=Host:transmission.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=8080
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    links:
+    - transmission:transmission
+    networks:
+    - vpn
+    - proxied
+    restart: unless-stopped
+  ubooquity:
+    container_name: ubooquity
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 2202
+    - 2203
+    image: linuxserver/ubooquity:latest
+    labels:
+    - traefik.docker.network=proxied
+    - traefik.frontend.rule=Host:ubooquity.${DOMAIN}
+    - traefik.port=2202
+    - traefik.default.protocol=http
+    - traefik.admin.frontend.rule=Host:admin-ubooquity.${DOMAIN}
+    - traefik.admin.port=2203
+    - traefik.admin.protocol=http
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/ubooquity/config:/config
+    - ${MEDIA_DIR_BOOKS}:/books
+    - ${MEDIA_DIR_COMICS}:/comics
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  watcher:
+    container_name: watcher
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TIMEZONE}
+    expose:
+    - 9090
+    image: linuxserver/watcher:latest
+    labels:
+    - traefik.backend=watcher
+    - traefik.frontend.rule=Host:watcher.${DOMAIN}
+    - traefik.docker.network=proxied
+    - traefik.port=9090
+    - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+    - internal
+    - proxied
+    restart: unless-stopped
+    volumes:
+    - ${CONTAINER_DIR}/watcher/config:/config
+    - ${MEDIA_DIR_MOVIES}:/movies
+    - ${DOWNLOAD_DIR}:/downloads
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+  watchtower:
+    command: --cleanup --schedule "0 0 2 * * *"
+    container_name: watchtower
+    image: v2tec/watchtower:latest
+    networks:
+    - proxied
+    - internal
+    restart: unless-stopped
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - ${SHARED_DIR}:/shared
+    - /etc/localtime:/etc/localtime:ro
+version: "3"
