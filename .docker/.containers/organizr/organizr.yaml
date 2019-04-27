@@ -1,0 +1,16 @@
+services:
+  # Organizr
+  organizr:
+    container_name: organizr
+    volumes:
+      - ${CONTAINER_DIR}/organizr/config:/config
+      - ${SHARED_DIR}:/shared
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    networks:
+      - internal
+      - proxied
+    restart: unless-stopped

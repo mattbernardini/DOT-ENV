@@ -1,0 +1,16 @@
+services:
+  # Muximux
+  muximux:
+    container_name: muximux
+    volumes:
+      - ${CONTAINER_DIR}/muximux/config:/config
+      - ${SHARED_DIR}:/shared
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    networks:
+      - internal
+      - proxied
+    restart: unless-stopped

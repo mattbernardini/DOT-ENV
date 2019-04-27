@@ -1,0 +1,4 @@
+services:
+  headphones:
+    labels:
+      - traefik.frontend.auth.basic.usersFile=/traefik.passwd

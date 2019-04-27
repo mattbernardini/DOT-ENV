@@ -1,0 +1,17 @@
+services:
+  # NZBHydra
+  hydra:
+    container_name: hydra
+    volumes:
+      - ${CONTAINER_DIR}/hydra/config:/config
+      - ${DOWNLOAD_DIR}/hydra/blackhole:/downloads
+      - ${SHARED_DIR}:/shared
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    networks:
+      - internal
+      - proxied
+    restart: unless-stopped

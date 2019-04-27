@@ -1,0 +1,26 @@
+services:
+  # Traefik
+  traefik:
+    container_name: traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${CONTAINER_DIR}/traefik/traefik.toml:/traefik.toml
+      - ${CONTAINER_DIR}/traefik/acme.json:/acme.json
+      - ${CONTAINER_DIR}/traefik/traefik.passwd:/traefik.passwd
+      - ${SHARED_DIR}:/shared
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - traefik.backend=traefik
+      - traefik.frontend.rule=Host:traefik.${DOMAIN}
+      - traefik.docker.network=proxied
+      - traefik.port=8080
+      - traefik.frontend.auth.basic.usersFile=/traefik.passwd
+    networks:
+      - proxied
+      - internal
+    ports:
+      - 80:80
+      - 443:443
+    expose:
+      - 8080
+    restart: unless-stopped

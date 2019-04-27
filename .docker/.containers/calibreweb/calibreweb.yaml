@@ -1,0 +1,17 @@
+services:
+  # Calibre Web
+  calibreweb:
+    container_name: calibreweb
+    volumes:
+      - ${CONTAINER_DIR}/calibreweb/config:/config
+      - ${MEDIA_DIR_BOOKS}:/books
+      - ${SHARED_DIR}:/shared
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    networks:
+      - proxied
+      - internal
+    restart: unless-stopped

@@ -1,0 +1,10 @@
+services:
+  # Plex Server
+  plex:
+    labels:
+      - traefik.backend=plex
+      - traefik.frontend.rule=Host:plex.${DOMAIN}
+      - traefik.docker.network=proxied
+      - traefik.port=32400
+    expose:
+      - 32400

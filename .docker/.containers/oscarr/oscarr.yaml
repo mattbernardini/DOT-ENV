@@ -1,0 +1,16 @@
+services:
+  # Oscarr
+  oscarr:
+    container_name: oscarr
+    volumes:
+      - ${CONTAINER_DIR}/oscarr:/data
+      - ${SHARED_DIR}:/shared
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    networks:
+      - proxied
+      - internal
+    restart: unless-stopped

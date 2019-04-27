@@ -1,0 +1,16 @@
+services:
+  # HTPC Manager
+  htpcmanager:
+    container_name: htpcmanager
+    volumes:
+      - ${CONTAINER_DIR}/htpcmanager/config:/config
+      - ${SHARED_DIR}:/shared
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    networks:
+      - internal
+      - proxied
+    restart: unless-stopped

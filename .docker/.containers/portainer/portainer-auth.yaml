@@ -1,0 +1,4 @@
+services:
+  portainer:
+    labels:
+      - traefik.frontend.auth.basic.usersFile=/traefik.passwd

@@ -1,0 +1,16 @@
+services:
+  # Ombi
+  ombi:
+    container_name: ombi
+    volumes:
+      - ${CONTAINER_DIR}/ombi/config:/config
+      - ${SHARED_DIR}:/shared
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    networks:
+      - proxied
+      - internal
+    restart: unless-stopped

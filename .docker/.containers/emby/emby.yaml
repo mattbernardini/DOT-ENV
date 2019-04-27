@@ -1,0 +1,19 @@
+services:
+  # Emby
+  emby:
+    container_name: emby
+    volumes:
+      - ${CONTAINER_DIR}/emby/config:/config
+      - ${MEDIA_DIR_TV}:/data/tv
+      - ${MEDIA_DIR_MOVIES}:/data/movies
+      - ${MEDIA_DIR_MUSIC}:/data/music
+      - ${SHARED_DIR}:/shared
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    networks:
+      - proxied
+      - internal
+    restart: unless-stopped

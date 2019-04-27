@@ -1,0 +1,18 @@
+services:
+  # Watcher
+  watcher:
+    container_name: watcher
+    volumes:
+      - ${CONTAINER_DIR}/watcher/config:/config
+      - ${MEDIA_DIR_MOVIES}:/movies
+      - ${DOWNLOAD_DIR}:/downloads
+      - ${SHARED_DIR}:/shared
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    networks:
+      - internal
+      - proxied
+    restart: unless-stopped

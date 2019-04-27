@@ -1,0 +1,19 @@
+services:
+  # Tautulli
+  tautulli:
+    container_name: tautulli
+    volumes:
+      - ${CONTAINER_DIR}/tautulli/config:/config
+      - ${CONTAINER_DIR}/plex/config/Library/Application\ Support/Plex\ Media\ Server/Logs:/logs:ro
+      - ${SHARED_DIR}:/shared
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    networks:
+      - proxied
+      - internal
+    depends_on:
+      - plex    
+    restart: unless-stopped

@@ -1,0 +1,44 @@
+services:
+  ## Torrenting over VPN
+  # Transmission - OpenVPN
+  transmission:
+    container_name: transmission
+    volumes:
+      - ${CONTAINER_DIR}/transmission:/data
+      - ${DOWNLOAD_DIR}:/downloads
+      - ${SHARED_DIR}:/shared
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+      - OPENVPN_PROVIDER=${VPN_PROVIDER}
+      - OPENVPN_USERNAME=${VPN_USER}
+      - OPENVPN_PASSWORD=${VPN_PASS}
+      - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60
+      - TRANSMISSION_DOWNLOAD_DIR=/downloads/complete
+      - TRANSMISSION_INCOMPLETE_DIR=/downloads/incomplete
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    networks:
+      - vpn
+    expose:
+      - 9091
+    restart: unless-stopped
+
+  transmission_proxy:
+    container_name: transmission_proxy
+    depends_on:
+      - transmission
+    links:
+      - transmission:transmission
+    networks:
+      - vpn
+      - proxied
+    restart: unless-stopped
+  ## /Torrenting over VPN
