@@ -5,7 +5,8 @@ def load_env():
     rt_val = {}
     with open(base_dir + "/.config/.env") as f:
         for line in f:
-            rt_val[line.split("=")[0].strip()] = line.split("=")[1].strip()
+            if not line.startswith("#"):
+                rt_val[line.split("=")[0].strip()] = line.split("=")[1].strip()
     print(rt_val)
 
 if __name__ == "__main__":
