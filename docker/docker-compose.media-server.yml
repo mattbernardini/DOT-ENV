@@ -1,9 +1,4 @@
-networks:
-  internal:
-    external: false
-  proxied:
-    external: true
-  vpn: null
+
 services:
   bazarr:
     container_name: bazarr
