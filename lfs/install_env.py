@@ -25,12 +25,12 @@ def create_directory(path, mode = None):
         os.chmod(path, mode)
 
 if __name__ == "__main__":
-    LFS = os.path.expanduser('~/lfs/')
+    LFS = os.path.expanduser('~/')
     lfs_sources = LFS + "sources/"
     # Section 3
-    create_directory(LFS + "sources", stat.S_IRWXU + stat.S_ISVTX + stat.S_IWGRP + stat.S_IWOTH)
-    wget_list_path = LFS + "sources/wget-list.txt"
-    files = urllib.request.urlretrieve("http://www.linuxfromscratch.org/lfs/view/stable/wget-list", wget_list_path)
+    # create_directory(LFS + "sources", stat.S_IRWXU + stat.S_ISVTX + stat.S_IWGRP + stat.S_IWOTH)
+    # wget_list_path = LFS + "sources/wget-list.txt"
+    # files = urllib.request.urlretrieve("http://www.linuxfromscratch.org/lfs/view/stable/wget-list", wget_list_path)
     # with open(wget_list_path, 'r') as f:
     #     for line in f:
     #         print("Downloading " + line.strip() + "....")
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     list_of_files.sort()
 
     # Binutils
-    # bin_utils = list_of_files[8]
+    bin_utils = list_of_files[8]
     # create_directory('.'.join(bin_utils.split(".")[:-2]))
     # os.system("tar -xJf " + bin_utils + " --directory " + '.'.join(bin_utils.split(".")[:-2]) + " --strip-components=1")
     # os.system("cd " + '.'.join(bin_utils.split(".")[:-2]) + " && mkdir -v build && cd build && " \
@@ -94,8 +94,12 @@ if __name__ == "__main__":
     #     "tar -xJf " + gmp + " --directory gmp --strip-components=1")
 
     print("Changing GCC's dynamic linker to use installed tools and changing to lib...")
+    print('.'.join(gcc.split(".")[:-2]) + "/config")
+    for file in os.listdir('.'.join(gcc.split(".")[:-2]) + "/config"):
+        print(file)
     os.system("cd " + '.'.join(gcc.split(".")[:-2]) + " && " \
         "bash " + '/'.join(os.path.realpath(__file__).split("/")[:-1]) + "/gcc_pass_one.sh")
+    exit()
 
     os.system("cd " + '.'.join(gcc.split(".")[:-2]) + "/build && " \
         "../configure "                                  \
