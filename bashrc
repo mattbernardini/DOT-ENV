@@ -137,3 +137,4 @@ PERL_MM_OPT="INSTALL_BASE=/home/matt/perl5"; export PERL_MM_OPT;
 export _JAVA_OPTIONS=-Xmx4096m
 export PYTHONPATH=$PYTHONPATH:~/github/statum/src
 export PYTHONIOENCODING=utf8
+export WINEARCH=win32
