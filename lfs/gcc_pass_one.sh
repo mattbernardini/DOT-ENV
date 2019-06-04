@@ -2,7 +2,7 @@ for file in gcc/config/{linux,i386/linux{,64}}.h
 do
   cp -uv $file{,.orig}
   sed -e 's@/lib\(64\)\?\(32\)\?/ld@/home/lfs/tools&@g' \
-      -e 's@/usr@/home/lfs/tools@g' $file.orig > $file
+      -e 's@/usr@/tools@g' $file.orig > $file
   echo '
 #undef STANDARD_STARTFILE_PREFIX_1
 #undef STANDARD_STARTFILE_PREFIX_2

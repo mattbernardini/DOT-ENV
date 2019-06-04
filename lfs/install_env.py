@@ -60,10 +60,14 @@ if __name__ == "__main__":
     os.system("tar -xJf " + bin_utils + " --directory " + '.'.join(bin_utils.split(".")[:-2]) + " --strip-components=1")
     os.system("cd " + '.'.join(bin_utils.split(".")[:-2]) + " && mkdir -v build && cd build && " \
         " ../configure "
-        "--prefix=" + LFS + "tools "
-        "--with-sysroot=" + LFS +
-        " --with-lib-path=" + LFS + "tools/lib"
+        "--prefix=/tools "
+        "--with-sysroot=$LFS "
+        "--with-lib-path=/tools/lib"
         "--disable-nls --disable-werror && " + make_command)
+
+
+    # Symlink lib and lib64
+    os.system("mkdir -v $LFS/tools/lib && ln -sv lib $LFS/tools/lib64")
 
     # GCC Pass 1
 
