@@ -28,20 +28,20 @@ if __name__ == "__main__":
     LFS = os.path.expanduser('~/')
     lfs_sources = LFS + "sources/"
     # Section 3
-    # create_directory(LFS + "sources", stat.S_IRWXU + stat.S_ISVTX + stat.S_IWGRP + stat.S_IWOTH)
-    # wget_list_path = LFS + "sources/wget-list.txt"
-    # files = urllib.request.urlretrieve("http://www.linuxfromscratch.org/lfs/view/stable/wget-list", wget_list_path)
-    # with open(wget_list_path, 'r') as f:
-    #     for line in f:
-    #         print("Downloading " + line.strip() + "....")
-    #         urllib.request.urlretrieve(line, filename=LFS + "sources/" + line.split("/")[-1].strip())
+    create_directory(LFS + "sources", stat.S_IRWXU + stat.S_ISVTX + stat.S_IWGRP + stat.S_IWOTH)
+    wget_list_path = LFS + "sources/wget-list.txt"
+    files = urllib.request.urlretrieve("http://www.linuxfromscratch.org/lfs/view/stable/wget-list", wget_list_path)
+    with open(wget_list_path, 'r') as f:
+        for line in f:
+            print("Downloading " + line.strip() + "....")
+            urllib.request.urlretrieve(line, filename=LFS + "sources/" + line.split("/")[-1].strip())
 
     # """
     #     Section 4
     # """
-    # create_directory(LFS + "tools", None)
+    create_directory(LFS + "tools", None)
     # # # From section 5.1
-    # os.system("mkdir -v " + LFS + "tools/lib && ln -sv lib " + LFS + "tools/lib64")
+    os.system("mkdir -v " + LFS + "tools/lib && ln -sv lib " + LFS + "tools/lib64")
 
     # """
     #     Section 5
@@ -55,19 +55,19 @@ if __name__ == "__main__":
     list_of_files.sort()
 
     # # Binutils
-    # bin_utils = list_of_files[8]
-    # create_directory('.'.join(bin_utils.split(".")[:-2]))
-    # os.system("tar -xJf " + bin_utils + " --directory " + '.'.join(bin_utils.split(".")[:-2]) + " --strip-components=1")
-    # os.system("cd " + '.'.join(bin_utils.split(".")[:-2]) + " && mkdir -v build && cd build && " \
-    #     " ../configure "
-    #     "--prefix=/tools "
-    #     "--with-sysroot=$LFS "
-    #     "--with-lib-path=/tools/lib"
-    #     "--disable-nls --disable-werror && " + make_command)
+    bin_utils = list_of_files[8]
+    create_directory('.'.join(bin_utils.split(".")[:-2]))
+    os.system("tar -xJf " + bin_utils + " --directory " + '.'.join(bin_utils.split(".")[:-2]) + " --strip-components=1")
+    os.system("cd " + '.'.join(bin_utils.split(".")[:-2]) + " && mkdir -v build && cd build && " \
+        " ../configure "
+        "--prefix=/tools "
+        "--with-sysroot=$LFS "
+        "--with-lib-path=/tools/lib"
+        "--disable-nls --disable-werror && " + make_command)
 
 
     # # Symlink lib and lib64
-    # os.system("mkdir -v $LFS/tools/lib && ln -sv lib $LFS/tools/lib64")
+    os.system("mkdir -v $LFS/tools/lib && ln -sv lib $LFS/tools/lib64")
 
     # GCC Pass 1
 
