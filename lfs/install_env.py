@@ -36,11 +36,12 @@ if __name__ == "__main__":
             print("Downloading " + line.strip() + "....")
             urllib.request.urlretrieve(line, filename=LFS + "sources/" + line.split("/")[-1].strip())
 
-    # """
-    #     Section 4
-    # """
+    """
+        Section 4
+    """
     create_directory(LFS + "tools", None)
-    # # # From section 5.1
+    os.system("chown -v lfs /home/lfs")
+    # From section 5.1
     os.system("mkdir -v " + LFS + "tools/lib && ln -sv lib " + LFS + "tools/lib64")
 
     # """
@@ -54,7 +55,7 @@ if __name__ == "__main__":
         list_of_files.append(f)#'.'.join(f.split(".")[:-2]).split("/")[-1])
     list_of_files.sort()
 
-    # # Binutils
+    # Binutils
     bin_utils = list_of_files[8]
     create_directory('.'.join(bin_utils.split(".")[:-2]))
     os.system("tar -xJf " + bin_utils + " --directory " + '.'.join(bin_utils.split(".")[:-2]) + " --strip-components=1")
@@ -98,8 +99,9 @@ if __name__ == "__main__":
         "tar -xJf " + gmp + " --directory gmp --strip-components=1")
 
     print("Changing GCC's dynamic linker to use installed tools and changing to lib...")
-    os.system("cd " + '.'.join(gcc.split(".")[:-2]) + " && " \
-        "bash " + '/'.join(os.path.realpath(__file__).split("/")[:-1]) + "/gcc_pass_one.sh")
+    os.system("cp ./gcc_pass_one.sh " + '.'.join(gcc.split(".")[:-2]) + " &&  cd " + '.'.join(gcc.split(".")[:-2]) + " && ./gcc_pass_one.sh")
+    # os.system("cp " + '.'.join(gcc.split(".")[:-2]) + " && " \
+    #     "bash " + '/'.join(os.path.realpath(__file__).split("/")[:-1]) + "/gcc_pass_one.sh")
 
     os.system("cd " + '.'.join(gcc.split(".")[:-2]) + "/build && " \
         "../configure "                                  \
