@@ -62,8 +62,8 @@ if __name__ == "__main__":
     os.system("cd " + '.'.join(bin_utils.split(".")[:-2]) + " && mkdir -v build && cd build && " \
         " ../configure "
         "--prefix=/tools "
-        "--with-sysroot=$LFS "
-        "--with-lib-path=/tools/lib"
+        "--with-sysroot=/home/lfs "
+        "--with-lib-path=/home/lfs/tools/lib"
         "--disable-nls --disable-werror && " + make_command)
 
 
