@@ -61,7 +61,7 @@ if __name__ == "__main__":
     os.system("tar -xJf " + bin_utils + " --directory " + '.'.join(bin_utils.split(".")[:-2]) + " --strip-components=1")
     os.system("cd " + '.'.join(bin_utils.split(".")[:-2]) + " && mkdir -v build && cd build && " \
         " ../configure "
-        "--prefix=/tools "
+        "--prefix=/home/lfs/tools "
         "--with-sysroot=/home/lfs "
         "--with-lib-path=/home/lfs/tools/lib"
         "--disable-nls --disable-werror && " + make_command)
