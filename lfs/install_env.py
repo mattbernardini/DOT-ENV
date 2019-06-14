@@ -1,22 +1,44 @@
 #!/env/python3
-from __future__ import division, print_function, absolute_import
+from __future__ import absolute_import, division, print_function
 
-import os
-import stat
-import urllib.request
-import ssl
+import argparse
 import glob
 import multiprocessing
-import argparse
+import os
+import pathlib
+import re
+import ssl
+import stat
+import urllib.request
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
 make_command = "make -j " + str(multiprocessing.cpu_count()) + " && make install"
 
-def find_name(name, _list):
-    for _name in _list:
-        pass
+def test_and_untar(file_to_untar: str, tar_switch: str, strip_version: bool = False, location_to_untar_to = None):
+    """
+        Args:
+            file_to_untar:          The full path to the file that we wish to untar
+            tar_switch:             The switches that the tar command needs in order to successfully untar the file
+            strip_version:          Whether to strip the version numbers of out the file name when untarring
+            location_to_untar_to:   The root location that we wish to untar to
+
+        Example:
+            WITHOUT LOCATION:
+                If we wish to untar /home/lfs/sources/gcc-8.2.0.tar.xz to /home/lfs/sources/gcc-8.2.0
+                we would call this function:
+                    test_and_untar("/home/lfs/sources/gcc-8.2.0.tar.xz", "xJ")
+                and the function would result in gcc untarred at /home/fs/sources/gcc-8.2.0
+            WITH LOCATION:
+                if we wish to untar /home/lfs/sources/mpfr-4.0.2.tar.xz to /home/lfs/sources/gcc-8.2.0/mpfr
+                we would call it this way:
+                    test_and_untar("/home/lfs/sources/mpfr-4.0.2.tar.xz", "xJ", True, "/home/lfs/sources/gcc-8.2.0")
+    """
+    if location_to_untar_to:
+        if os.path.isdir(file_to_untar.split(".")[:-2]):
+            os.rmdir(file_to_untar.split(".")[:-2])
     pass
+
 
 def create_directory(path, mode = None):
     print("Creating directory " + path + "....")
@@ -26,10 +48,13 @@ def create_directory(path, mode = None):
         pass
     if mode is not None:
         os.chmod(path, mode)
+
 def parse_args():
     # Arguments
     parser = argparse.ArgumentParser(description="Build a consistent environment for Matt")
     parser.add_argument('--download', help="Whether we should download the files from remotes", action="store_true")
+    parser.add_argument('--gcc-pass-one', help="Whether we !DO NOT! need to run the gcc first build", action="store_const", const=True)
+    #parser.add_argument('--user', help="The user under which we are currently running")
     return parser.parse_args()
 
 
@@ -71,7 +96,6 @@ if __name__ == "__main__":
     bin_utils = list_of_files[8]
     create_directory('.'.join(bin_utils.split(".")[:-2]))
     os.system("tar -xJf " + bin_utils + " --directory " + '.'.join(bin_utils.split(".")[:-2]) + " --strip-components=1")
-    exit()
     os.system("cd " + '.'.join(bin_utils.split(".")[:-2]) + " && mkdir -v build && cd build && " \
         " ../configure "
         "--prefix=/home/lfs/tools "
@@ -79,12 +103,7 @@ if __name__ == "__main__":
         "--with-lib-path=/home/lfs/tools/lib"
         "--disable-nls --disable-werror && " + make_command)
 
-
-    # # Symlink lib and lib64
-    os.system("mkdir -v $LFS/tools/lib && ln -sv lib $LFS/tools/lib64")
-
     # GCC Pass 1
-
     gcc = list_of_files[25]
     mpfr = list_of_files[54]
     mpc = list_of_files[53]
@@ -112,9 +131,7 @@ if __name__ == "__main__":
         "tar -xJf " + gmp + " --directory gmp --strip-components=1")
 
     print("Changing GCC's dynamic linker to use installed tools and changing to lib...")
-    os.system("cp ./gcc_pass_one.sh " + '.'.join(gcc.split(".")[:-2]) + " &&  cd " + '.'.join(gcc.split(".")[:-2]) + " && ./gcc_pass_one.sh")
-    # os.system("cp " + '.'.join(gcc.split(".")[:-2]) + " && " \
-    #     "bash " + '/'.join(os.path.realpath(__file__).split("/")[:-1]) + "/gcc_pass_one.sh")
+    os.system("cp ./gcc_pass_one.sh " + '.'.join(gcc.split(".")[:-2]) + " &&  cd " + '.'.join(gcc.split(".")[:-2]) + " && chmod +x gcc_pass_one.sh && ./gcc_pass_one.sh")
 
     os.system("cd " + '.'.join(gcc.split(".")[:-2]) + "/build && " \
         "../configure "                                  \
