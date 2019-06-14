@@ -7,12 +7,15 @@ import urllib.request
 import ssl
 import glob
 import multiprocessing
+import argparse
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
-make_command = "make -j " +str(multiprocessing.cpu_count()) + " && make install"
+make_command = "make -j " + str(multiprocessing.cpu_count()) + " && make install"
 
-def find_name(name, list):
+def find_name(name, _list):
+    for _name in _list:
+        pass
     pass
 
 def create_directory(path, mode = None):
@@ -23,18 +26,27 @@ def create_directory(path, mode = None):
         pass
     if mode is not None:
         os.chmod(path, mode)
+def parse_args():
+    # Arguments
+    parser = argparse.ArgumentParser(description="Build a consistent environment for Matt")
+    parser.add_argument('--download', help="Whether we should download the files from remotes", action="store_true")
+    return parser.parse_args()
+
 
 if __name__ == "__main__":
+    args = parse_args()
     LFS = os.path.expanduser('~/')
     lfs_sources = LFS + "sources/"
     # Section 3
     create_directory(LFS + "sources", stat.S_IRWXU + stat.S_ISVTX + stat.S_IWGRP + stat.S_IWOTH)
-    wget_list_path = LFS + "sources/wget-list.txt"
-    files = urllib.request.urlretrieve("http://www.linuxfromscratch.org/lfs/view/stable/wget-list", wget_list_path)
-    with open(wget_list_path, 'r') as f:
-        for line in f:
-            print("Downloading " + line.strip() + "....")
-            urllib.request.urlretrieve(line, filename=LFS + "sources/" + line.split("/")[-1].strip())
+
+    if args.download:
+        wget_list_path = LFS + "sources/wget-list.txt"
+        files = urllib.request.urlretrieve("http://www.linuxfromscratch.org/lfs/view/stable/wget-list", wget_list_path)
+        with open(wget_list_path, 'r') as f:
+            for line in f:
+                print("Downloading " + line.strip() + "....")
+                urllib.request.urlretrieve(line, filename=LFS + "sources/" + line.split("/")[-1].strip())
 
     """
         Section 4
@@ -42,7 +54,7 @@ if __name__ == "__main__":
     create_directory(LFS + "tools", None)
     os.system("chown -v lfs /home/lfs")
     # From section 5.1
-    os.system("mkdir -v " + LFS + "tools/lib && ln -sv lib " + LFS + "tools/lib64")
+    os.system("mkdir -v " + LFS + "tools/lib && ln -sv " + LFS + "tools/lib " + LFS + "tools/lib64")
 
     # """
     #     Section 5
@@ -59,6 +71,7 @@ if __name__ == "__main__":
     bin_utils = list_of_files[8]
     create_directory('.'.join(bin_utils.split(".")[:-2]))
     os.system("tar -xJf " + bin_utils + " --directory " + '.'.join(bin_utils.split(".")[:-2]) + " --strip-components=1")
+    exit()
     os.system("cd " + '.'.join(bin_utils.split(".")[:-2]) + " && mkdir -v build && cd build && " \
         " ../configure "
         "--prefix=/home/lfs/tools "
