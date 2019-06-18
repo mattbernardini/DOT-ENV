@@ -54,6 +54,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Build a consistent environment for Matt")
     parser.add_argument('--download', help="Whether we should download the files from remotes", action="store_true")
     parser.add_argument('--gcc-pass-one', help="Whether we !DO NOT! need to run the gcc first build", action="store_const", const=True)
+    parser.add_argument('--clean', help="Whether we should clean out sources", action="store_true")
     #parser.add_argument('--user', help="The user under which we are currently running")
     return parser.parse_args()
 
@@ -92,6 +93,9 @@ if __name__ == "__main__":
         list_of_files.append(f)#'.'.join(f.split(".")[:-2]).split("/")[-1])
     list_of_files.sort()
 
+    for i in zip(list_of_files, range(list_of_files.__len__())):
+        print(i)
+    exit()
     # Binutils
     bin_utils = list_of_files[8]
     create_directory('.'.join(bin_utils.split(".")[:-2]))
@@ -99,6 +103,7 @@ if __name__ == "__main__":
     os.system("cd " + '.'.join(bin_utils.split(".")[:-2]) + " && mkdir -v build && cd build && " \
         " ../configure "
         "--prefix=/home/lfs/tools "
+        "--target=$LFS_TGT "
         "--with-sysroot=/home/lfs "
         "--with-lib-path=/home/lfs/tools/lib"
         "--disable-nls --disable-werror && " + make_command)
@@ -158,3 +163,10 @@ if __name__ == "__main__":
         "--enable-languages=c,c++ "                      \
         "--disable-bootstrap"
         "&& " + make_command)
+
+    # Linux API Headers
+
+    linux_header_api = list_of_files[47]
+
+    os.system("tar -xJf " + gcc + " --directory " + '.'.join(linux_header_api.split(".")[:-2]) + " --strip-components=1")
+    os.system("cd " + '.'.join(linux_header_api.split(".")[:-2]) + " && make clean && make mrproper && make INSTALL_HDR_PATH=dest headers_install && cp -rv dest/include/* ~/tools/include")
