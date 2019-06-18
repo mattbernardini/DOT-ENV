@@ -95,7 +95,7 @@ if __name__ == "__main__":
 
     for i in zip(list_of_files, range(list_of_files.__len__())):
         print(i)
-    exit()
+
     # Binutils
     bin_utils = list_of_files[8]
     create_directory('.'.join(bin_utils.split(".")[:-2]))
