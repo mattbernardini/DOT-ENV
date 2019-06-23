@@ -256,11 +256,11 @@ if __name__ == "__main__":
               "--enable-languages=c,c++ "
               "--disable-bootstrap"
               "&& " + make_command)
-
     # Linux API Headers
     linux_header_api = list_of_files[47]
 
     create_directory('.'.join(linux_header_api.split(".")[:-2]))
+    print("Untarring linus headers...")
     os.system("tar -xJf " + linux_header_api + " --directory " + '.'.join(linux_header_api.split(".")[:-2]) +
               " --strip-components=1")
     os.system("cd " + '.'.join(linux_header_api.split(".")[:-2]) +
