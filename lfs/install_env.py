@@ -168,5 +168,5 @@ if __name__ == "__main__":
 
     linux_header_api = list_of_files[47]
 
-    os.system("tar -xJf " + gcc + " --directory " + '.'.join(linux_header_api.split(".")[:-2]) + " --strip-components=1")
+    os.system("tar -xJf " + linux_header_api + " --directory " + '.'.join(linux_header_api.split(".")[:-2]) + " --strip-components=1")
     os.system("cd " + '.'.join(linux_header_api.split(".")[:-2]) + " && make clean && make mrproper && make INSTALL_HDR_PATH=dest headers_install && cp -rv dest/include/* ~/tools/include")
