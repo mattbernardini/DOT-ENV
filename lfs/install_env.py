@@ -264,7 +264,7 @@ if __name__ == "__main__":
               "--disable-libvtv "
               "--disable-libstdcxx "
               "--enable-languages=c,c++ "
-              "--disable-bootstrap"
+              "--disable-bootstrap "
               "&& " + make_command)
     # Linux API Headers
     linux_header_api = list_of_files[47]
