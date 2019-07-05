@@ -293,15 +293,15 @@ if __name__ == "__main__":
               "--with-headers=$LFS/tools/include && " + make_command)
 
     # Libstdc++ Build
-    create_directory('.'.join(gcc.split(".")[:-2]) + "/libcxx_build")
-    os.system("cd " + '.'.join(gcc.split(".")[:-2]) + "/libcxx_build && "
-              "../libstdc++-v3/configure "
-              "--target=$LFS_TGT "
-              "--host=$LFS_TGT "
-              "--prefix=$LFS/tools "
-              "--disable-multilib "
-              "--disable-nls "
-              "--disable-libstdcxx-threads "
-              "--disable-libstdcxx-pch "
-              "--with-gxx-include-dir=$LFS/tools/$LGS_TGT/include/c++/8.2.0 "
-              " && " + make_command)
+    # create_directory('.'.join(gcc.split(".")[:-2]) + "/libcxx_build")
+    # os.system("cd " + '.'.join(gcc.split(".")[:-2]) + "/libcxx_build && "
+    #           "../libstdc++-v3/configure "
+    #           "--target=$LFS_TGT "
+    #           "--host=$LFS_TGT "
+    #           "--prefix=$LFS/tools "
+    #           "--disable-multilib "
+    #           "--disable-nls "
+    #           "--disable-libstdcxx-threads "
+    #           "--disable-libstdcxx-pch "
+    #           "--with-gxx-include-dir=$LFS/tools/$LGS_TGT/include/c++/8.2.0 "
+    #           " && " + make_command)
