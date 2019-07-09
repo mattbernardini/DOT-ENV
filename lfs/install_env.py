@@ -203,10 +203,10 @@ if __name__ == "__main__":
               '.'.join(bin_utils.split(".")[:-2]) + " --strip-components=1")
     os.system("cd " + '.'.join(bin_utils.split(".")[:-2]) + " && mkdir -v build && cd build && "
               " ../configure "
-              "--prefix=/tools "
+              "--prefix=$LFS/tools "
               "--target=$LFS_TGT "
               "--with-sysroot=$LFS "
-              "--with-lib-path=/tools/lib"
+              "--with-lib-path=$LFS/tools/lib"
               "--disable-nls --disable-werror && " + make_command)
 
     # GCC Pass 1
@@ -244,13 +244,13 @@ if __name__ == "__main__":
     os.system("cd " + '.'.join(gcc.split(".")[:-2]) + "/build && "
               "../configure "
               "--target=$LFS_TGT "
-              "--prefix=/tools "
+              "--prefix=$LFS/tools "
               "--with-glibc-version=2.11 "
               "--with-sysroot=$LFS "
               "--with-newlib "
               "--without-headers "
-              "--with-local-prefix=/tools "
-              "--with-native-system-header-dir=/tools/include "
+              "--with-local-prefix=$LFS/tools "
+              "--with-native-system-header-dir=$LFS/tools/include "
               "--disable-nls "
               "--disable-shared "
               "--disable-multilib "
@@ -266,31 +266,31 @@ if __name__ == "__main__":
               "--enable-languages=c,c++ "
              # "--disable-bootstrap "
               "&& " + make_command)
-    # Linux API Headers
-    linux_header_api = list_of_files[47]
+    # # Linux API Headers
+    # linux_header_api = list_of_files[47]
 
-    create_directory('.'.join(linux_header_api.split(".")[:-2]))
-    print("Untarring linux headers...")
-    os.system("tar -xJf " + linux_header_api + " --directory " + '.'.join(linux_header_api.split(".")[:-2]) +
-              " --strip-components=1")
-    os.system("cd " + '.'.join(linux_header_api.split(".")[:-2]) +
-              " && make clean && make mrproper && make INSTALL_HDR_PATH=dest headers_install && cp -rv dest/include/* ~/tools/include")
+    # create_directory('.'.join(linux_header_api.split(".")[:-2]))
+    # print("Untarring linux headers...")
+    # os.system("tar -xJf " + linux_header_api + " --directory " + '.'.join(linux_header_api.split(".")[:-2]) +
+    #           " --strip-components=1")
+    # os.system("cd " + '.'.join(linux_header_api.split(".")[:-2]) +
+    #           " && make clean && make mrproper && make INSTALL_HDR_PATH=dest headers_install && cp -rv dest/include/* ~/tools/include")
 
-    # Glibc
-    glibc = list_of_files[28]
-    create_directory('.'.join(glibc.split(".")[:-2]))
-    create_directory('.'.join(glibc.split(".")[:-2]) + "/build")
+    # # Glibc
+    # glibc = list_of_files[28]
+    # create_directory('.'.join(glibc.split(".")[:-2]))
+    # create_directory('.'.join(glibc.split(".")[:-2]) + "/build")
 
-    print("Untarring glibc...")
-    os.system("tar -xJf " + glibc + " --directory " +
-              '.'.join(glibc.split(".")[:-2]) + " --strip-components=1")
-    os.system("cd " + '.'.join(glibc.split(".")[:-2]) + "/build && "
-              "../configure "
-              "--prefix=/tools "
-              "--host=$LFS_TGT "
-              "--build=$(..scripts/config.guess) "
-              "--enable-kernel=3.2 "
-              "--with-headers=/tools/include && " + make_command)
+    # print("Untarring glibc...")
+    # os.system("tar -xJf " + glibc + " --directory " +
+    #           '.'.join(glibc.split(".")[:-2]) + " --strip-components=1")
+    # os.system("cd " + '.'.join(glibc.split(".")[:-2]) + "/build && "
+    #           "../configure "
+    #           "--prefix=/tools "
+    #           "--host=$LFS_TGT "
+    #           "--build=$(..scripts/config.guess) "
+    #           "--enable-kernel=3.2 "
+    #           "--with-headers=/tools/include && " + make_command)
 
     # Libstdc++ Build
     # create_directory('.'.join(gcc.split(".")[:-2]) + "/libcxx_build")
