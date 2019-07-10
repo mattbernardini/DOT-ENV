@@ -11,7 +11,13 @@ import re
 import ssl
 import stat
 import urllib.request
+"""
+LIB_DIRS =
+        /home/lfs/tools/lib/gcc/x86_64-lfs-linux-gnu/8.2.0/plugin
+        /home/lfs/tools/lib
+        /home/lfs/tools/libexec/gcc/x86_64-lfs-linux-gnu/8.2.0
 
+"""
 ssl._create_default_https_context = ssl._create_unverified_context
 
 make_command = "make -j " + \
@@ -209,63 +215,63 @@ if __name__ == "__main__":
               "--with-lib-path=$LFS/tools/lib"
               "--disable-nls --disable-werror && " + make_command)
 
-    # GCC Pass 1
-    gcc = list_of_files[25]
-    mpfr = list_of_files[54]
-    mpc = list_of_files[53]
-    gmp = list_of_files[29]
+    # # GCC Pass 1
+    # gcc = list_of_files[25]
+    # mpfr = list_of_files[54]
+    # mpc = list_of_files[53]
+    # gmp = list_of_files[29]
 
-    create_directory('.'.join(gcc.split(".")[:-2]))
-    create_directory('.'.join(gcc.split(".")[:-2]) + "/build")
+    # create_directory('.'.join(gcc.split(".")[:-2]))
+    # create_directory('.'.join(gcc.split(".")[:-2]) + "/build")
 
-    print("Untarring gcc...")
-    os.system("tar -xJf " + gcc + " --directory " +
-              '.'.join(gcc.split(".")[:-2]) + " --strip-components=1")
+    # print("Untarring gcc...")
+    # os.system("tar -xJf " + gcc + " --directory " +
+    #           '.'.join(gcc.split(".")[:-2]) + " --strip-components=1")
 
-    create_directory('.'.join(gcc.split(".")[:-2]) + "/mpfr")
-    print("Untarring mpfr...")
-    os.system("cd " + '.'.join(gcc.split(".")[:-2]) + " && "
-              "tar -xJf " + mpfr + " --directory mpfr --strip-components=1")
+    # create_directory('.'.join(gcc.split(".")[:-2]) + "/mpfr")
+    # print("Untarring mpfr...")
+    # os.system("cd " + '.'.join(gcc.split(".")[:-2]) + " && "
+    #           "tar -xJf " + mpfr + " --directory mpfr --strip-components=1")
 
-    create_directory('.'.join(gcc.split(".")[:-2]) + "/mpc")
-    print("Untarring mpc...")
-    os.system("cd " + '.'.join(gcc.split(".")[:-2]) + " && "
-              "tar -xzf " + mpc + " --directory mpc --strip-components=1")
+    # create_directory('.'.join(gcc.split(".")[:-2]) + "/mpc")
+    # print("Untarring mpc...")
+    # os.system("cd " + '.'.join(gcc.split(".")[:-2]) + " && "
+    #           "tar -xzf " + mpc + " --directory mpc --strip-components=1")
 
-    create_directory('.'.join(gcc.split(".")[:-2]) + "/gmp")
-    print("Untarring gmp...")
-    os.system("cd " + '.'.join(gcc.split(".")[:-2]) + " && "
-              "tar -xJf " + gmp + " --directory gmp --strip-components=1")
+    # create_directory('.'.join(gcc.split(".")[:-2]) + "/gmp")
+    # print("Untarring gmp...")
+    # os.system("cd " + '.'.join(gcc.split(".")[:-2]) + " && "
+    #           "tar -xJf " + gmp + " --directory gmp --strip-components=1")
 
-    print("Changing GCC's dynamic linker to use installed tools and changing to lib...")
-    os.system("cp ./gcc_pass_one.sh " + '.'.join(gcc.split(".")[:-2]) + " &&  cd " +
-              '.'.join(gcc.split(".")[:-2]) + " && chmod +x gcc_pass_one.sh && ./gcc_pass_one.sh")
+    # print("Changing GCC's dynamic linker to use installed tools and changing to lib...")
+    # os.system("cp ./gcc_pass_one.sh " + '.'.join(gcc.split(".")[:-2]) + " &&  cd " +
+    #           '.'.join(gcc.split(".")[:-2]) + " && chmod +x gcc_pass_one.sh && ./gcc_pass_one.sh")
 
-    os.system("cd " + '.'.join(gcc.split(".")[:-2]) + "/build && "
-              "../configure "
-              "--target=$LFS_TGT "
-              "--prefix=$LFS/tools "
-              "--with-glibc-version=2.11 "
-              "--with-sysroot=$LFS "
-              "--with-newlib "
-              "--without-headers "
-              "--with-local-prefix=$LFS/tools "
-              "--with-native-system-header-dir=$LFS/tools/include "
-              "--disable-nls "
-              "--disable-shared "
-              "--disable-multilib "
-              "--disable-decimal-float "
-              "--disable-threads "
-              "--disable-libatomic "
-              "--disable-libgomp "
-              "--disable-libmpx "
-              "--disable-libquadmath "
-              "--disable-libssp "
-              "--disable-libvtv "
-              "--disable-libstdcxx "
-              "--enable-languages=c,c++ "
-             # "--disable-bootstrap "
-              "&& " + make_command)
+    # os.system("cd " + '.'.join(gcc.split(".")[:-2]) + "/build && "
+    #           "../configure "
+    #           "--target=$LFS_TGT "
+    #           "--prefix=$LFS/tools "from absl import flags
+    #           "--with-glibc-version=from absl import flags
+    #           "--with-sysroot=$LFS "from absl import flags
+    #           "--with-newlib "
+    #           "--without-headers "
+    #           "--with-local-prefix=$LFS/tools "
+    #           "--with-native-system-header-dir=$LFS/tools/include "
+    #           "--disable-nls "
+    #           "--disable-shared "
+    #           "--disable-multilib "
+    #           "--disable-decimal-float "
+    #           "--disable-threads "
+    #           "--disable-libatomic "
+    #           "--disable-libgomp "
+    #           "--disable-libmpx "
+    #           "--disable-libquadmath "
+    #           "--disable-libssp "
+    #           "--disable-libvtv "
+    #           "--disable-libstdcxx "
+    #           "--enable-languages=c,c++ "
+    #          # "--disable-bootstrap "
+    #           "&& " + make_command)
     # # Linux API Headers
     # linux_header_api = list_of_files[47]
 
