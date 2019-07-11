@@ -256,7 +256,7 @@ if __name__ == "__main__":
               "--with-newlib "
               "--without-headers "
               "--with-local-prefix=$LFS/tools "
-              "--with-native-system-header-dir=$LFS/tools/include "
+              "--with-native-system-header-dir=/tools/include "
               "--disable-nls "
               "--disable-shared "
               "--disable-multilib "
