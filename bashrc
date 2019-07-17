@@ -129,7 +129,7 @@ umask 022 # writeable by owner, readable and executable by everyone
 export LC_ALL=POSIX
 export LFS_TGT=$(uname -m)-pc-linux-gnu
 
-PATH="/home/matt/lfs/tools/bin:/home/matt/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PATH="~/.npm-global/bin:/home/matt/lfs/tools/bin:/home/matt/perl5/bin${PATH:+:${PATH}}"; export PATH;
 PERL5LIB="/home/matt/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
 PERL_LOCAL_LIB_ROOT="/home/matt/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
 PERL_MB_OPT="--install_base \"/home/matt/perl5\""; export PERL_MB_OPT;
