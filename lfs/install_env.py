@@ -256,7 +256,7 @@ if __name__ == "__main__":
               "--with-newlib "
               "--without-headers "
               "--with-local-prefix=$LFS/tools "
-              "--with-native-system-header-dir=/tools/include "
+              "--with-native-system-header-dir=$LFS/tools/include "
               "--disable-nls "
               "--disable-shared "
               "--disable-multilib "
@@ -294,22 +294,24 @@ if __name__ == "__main__":
               '.'.join(glibc.split(".")[:-2]) + " --strip-components=1")
     os.system("cd " + '.'.join(glibc.split(".")[:-2]) + "/build && "
               "../configure "
-              "--prefix=/tools "
+              "--prefix=$LFS/tools "
               "--host=$LFS_TGT "
               "--build=$(..scripts/config.guess) "
               "--enable-kernel=3.2 "
-              "--with-headers=/tools/include && " + make_command)
+              "--with-headers=$LFS/tools/include && " + make_command)
+
+    os.system("ln -s ~/tools/lib/* ~/tools/lib/gcc/x86_64-lfs-linux-gnu/8.2.0/")
 
     # Libstdc++ Build
-    # create_directory('.'.join(gcc.split(".")[:-2]) + "/libcxx_build")
-    # os.system("cd " + '.'.join(gcc.split(".")[:-2]) + "/libcxx_build && "
-    #           "../libstdc++-v3/configure "
-    #           "--target=$LFS_TGT "
-    #           "--host=$LFS_TGT "
-    #           "--prefix=$LFS/tools "
-    #           "--disable-multilib "
-    #           "--disable-nls "
-    #           "--disable-libstdcxx-threads "
-    #           "--disable-libstdcxx-pch "
-    #           "--with-gxx-include-dir=$LFS/tools/$LGS_TGT/include/c++/8.2.0 "
-    #           " && " + make_command)
+    create_directory('.'.join(gcc.split(".")[:-2]) + "/libcxx_build")
+    os.system("cd " + '.'.join(gcc.split(".")[:-2]) + "/libcxx_build && "
+              "../libstdc++-v3/configure "
+              "--target=$LFS_TGT "
+              "--host=$LFS_TGT "
+              "--prefix=$LFS/tools "
+              "--disable-multilib "
+              "--disable-nls "
+              "--disable-libstdcxx-threads "
+              "--disable-libstdcxx-pch "
+              "--with-gxx-include-dir=$LFS/tools/$LGS_TGT/include/c++/8.2.0 "
+              " && " + make_command)
