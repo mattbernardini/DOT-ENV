@@ -315,3 +315,16 @@ if __name__ == "__main__":
               "--disable-libstdcxx-pch "
               "--with-gxx-include-dir=$LFS/tools/$LGS_TGT/include/c++/8.2.0 "
               " && " + make_command)
+
+    # Binutils Pass 2
+    os.system("cd " + '.'.join(bin_utils.split(".")[:-2]) + " && rm -rf build")
+    os.system("cd " + '.'.join(bin_utils.split(".")[:-2]) + " && mkdir -v build && cd build && "
+              "CC=$LFS_TGT-gcc "
+              "AR=$LFS_TGT-ar "
+              "RANLIb=$LFS_TGT-ranlib"
+              " ../configure "
+              "--prefix=$LFS/tools "
+              "--disable-nls "
+              "--disable-werror "
+              "--with-lib-path=$LFS/tools/lib "
+              "--with-sysroot " + make_command)
