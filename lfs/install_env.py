@@ -270,7 +270,7 @@ if __name__ == "__main__":
               "--disable-libvtv "
               "--disable-libstdcxx "
               "--enable-languages=c,c++ "
-             # "--disable-bootstrap "
+              "--disable-bootstrap "
               "&& " + make_command)
 
 
