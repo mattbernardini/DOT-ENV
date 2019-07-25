@@ -327,4 +327,4 @@ if __name__ == "__main__":
               "--disable-nls "
               "--disable-werror "
               "--with-lib-path=$LFS/tools/lib "
-              "--with-sysroot " + make_command)
+              "--with-sysroot && " + make_command)
